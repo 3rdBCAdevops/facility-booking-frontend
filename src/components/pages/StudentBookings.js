@@ -20,27 +20,12 @@ function StudentBookings() {
     }
   };
 
-  // 🔴 DIRECT DELETE WITH PASSWORD
-  const deleteWithPassword = async (id) => {
-    const enteredPassword = prompt("Enter password to delete:");
-
-    if (enteredPassword === null) {
-      return; // cancel pressed
-    }
-
-    if (enteredPassword !== "2006") {
-      alert("Wrong password!");
-      return;
-    }
-
+  const deleteBooking = async (id) => {
     try {
       await api.delete(`/bookings/${id}`);
-
-      setBookings((prev) => prev.filter((b) => b.id !== id));
-
-      alert("Deleted successfully");
+      setBookings(bookings.filter(b => b.id !== id));
     } catch (error) {
-      alert("Delete failed: " + error.message);
+      alert(error.message);
     }
   };
 
@@ -53,8 +38,7 @@ function StudentBookings() {
         value={userName}
         onChange={(e) => setUserName(e.target.value)}
       />
-
-      <button type="button" onClick={fetchBookings}>
+      <button onClick={fetchBookings} style={{ marginLeft: "10px" }}>
         View
       </button>
 
@@ -73,7 +57,6 @@ function StudentBookings() {
               <th>Action</th>
             </tr>
           </thead>
-
           <tbody>
             {bookings.map((b) => (
               <tr key={b.id}>
@@ -82,11 +65,7 @@ function StudentBookings() {
                 <td>{b.startTime} - {b.endTime}</td>
                 <td>{b.status}</td>
                 <td>
-                  {/* 🔥 DIRECT PASSWORD DELETE */}
-                  <button
-                    type="button"
-                    onClick={() => deleteWithPassword(b.id)}
-                  >
+                  <button onClick={() => deleteBooking(b.id)}>
                     Delete
                   </button>
                 </td>
